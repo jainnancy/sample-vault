@@ -1,0 +1,9 @@
+.idea/
+project/target/
+target/
+
+### Scala ###
+*.class
+*.log
+
+
