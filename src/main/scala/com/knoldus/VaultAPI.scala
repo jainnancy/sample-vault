@@ -18,20 +18,20 @@ import scala.util.{Failure, Success}
 
 object VaultAPIMain extends App {
 
-  val logger = Logger.getLogger(this.getClass)
-
   implicit val system: ActorSystem = ActorSystem("SampleVault")
+
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
+  val logger = Logger.getLogger(this.getClass)
   val http: HttpExt = Http.apply()
   val vault = new VaultAPI(vaultRootToken, http)
 
-  vault.getCredentials.onComplete{
+  vault.getCredentials.onComplete {
 
-    case _@ Success(Some(awsCredentials)) => logger.info(s"Access Key ID: ${awsCredentials.accessKeyId} \nSecret Access Key: ${awsCredentials.secretAccessKey}")
+    case _@Success(Some(awsCredentials)) => logger.info(s"Access Key ID: ${awsCredentials.accessKeyId} \nSecret Access Key: ${awsCredentials.secretAccessKey}")
 
-    case _@ Success(None) =>
+    case _@Success(None) =>
       logger.error("Either AWS Access Key ID or AWS Secret Access Key or both is missing.")
       throw new Exception("Either AWS Access Key ID or AWS Secret Access Key or both is missing.")
 
@@ -44,7 +44,7 @@ object VaultAPIMain extends App {
 class VaultAPI(clientToken: String, http: HttpExt)(implicit
                                                    val system: ActorSystem,
                                                    val materializer: ActorMaterializer,
-                                                   val executionContext: ExecutionContextExecutor){
+                                                   val executionContext: ExecutionContextExecutor) {
 
   val logger = Logger.getLogger(this.getClass)
 
